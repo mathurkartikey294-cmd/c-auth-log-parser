@@ -96,11 +96,16 @@ void detectsip(struct c_log_parser users[],int count){
     }
 }
 
-int main(){
+int main(int argc,char *argv[]){
+    if(argc != 2){
+        printf("Give the log file");
+        return 1;
+    }
+
     int count = 0;
     int capacity = 2;
    struct c_log_parser *users = malloc(capacity*sizeof (struct c_log_parser));
-    FILE *fp = fopen("C:\\Users\\Admin\\Downloads\\creds-dump.txt","r");
+    FILE *fp = fopen("argv[1]","r");
     if(fp == NULL){
         printf("File not opened");
         return 1;
