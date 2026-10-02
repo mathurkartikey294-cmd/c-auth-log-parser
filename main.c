@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<strings.h>
+#include<string.h>
 #include<stdlib.h>
 
 
@@ -20,15 +20,16 @@ struct c_log_parser{
 };
 void report(struct c_log_parser users[],int count){
     int success = 0;
-    int failure = count - success;
+   
     for(int i = 0;i<count;i++){
         if(strcmp(users[i].status,"Accepted")==0){
             success++;
         }
     }
-    printf("Total login attempts are %d", count);
-    printf("Successful login are %d ", success);
-    printf("Failed attempts are %d", failure);
+     int failure = count - success;
+    printf("Total login attempts are %d\n", count);
+    printf("Successful login are %d\n", success);
+    printf("Failed attempts are %d\n", failure);
 }
 void detectsun(struct c_log_parser users[],int count){
     for (int i = 0; i < count; i++) {
@@ -105,7 +106,7 @@ int main(){
         return 1;
     }
     char line[200];
-    while(fgets(count<100 && line,sizeof line,fp) != NULL){
+    while(fgets( line,sizeof line,fp) != NULL){
         int n = (sscanf(line,"%3s %d %19s ubuntu-server %4s[%d]: %19s password for %19s from %19s port %d ssh2",
         users[count].dnm1.month,&users[count].dnm1.date,users[count].time,users[count].progrm,&users[count].pid,users[count].status,users[count].username,users[count].ip,&users[count].port));
         if(n != 9){
@@ -121,9 +122,15 @@ int main(){
                 return 1;
             }
             users = temp;
+            capacity = newc;
+
 
         }
     }
     fclose(fp);
+    report(users,count);
+    detectsun(users,count);
+    detectsip(users,count);
+    free(users);
     return 0;
 }
