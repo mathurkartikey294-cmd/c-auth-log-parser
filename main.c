@@ -18,7 +18,7 @@ struct c_log_parser{
     char status[50];
     int port;
 };
-int report(struct c_log_parser users[],int count){
+void report(struct c_log_parser users[],int count){
     int success = 0;
     int failure = count - success;
     for(int i = 0;i<count;i++){
@@ -30,6 +30,71 @@ int report(struct c_log_parser users[],int count){
     printf("Successful login are %d ", success);
     printf("Failed attempts are %d", failure);
 }
+void detectsun(struct c_log_parser users[],int count){
+    for (int i = 0; i < count; i++) {
+
+        if (strcmp(users[i].status, "Failed") != 0) {
+            continue;                      
+        }
+
+        int already = 0;
+        for (int k = 0; k < i; k++) {
+            if (strcmp(users[k].status, "Failed") == 0 &&
+                strcmp(users[k].username, users[i].username) == 0) {
+                already = 1;
+                break;
+            }
+        }
+        if (already) {
+            continue;                  
+        }
+        int c = 0;
+        for (int j = i; j < count; j++) {
+            if (strcmp(users[j].status, "Failed") == 0 &&
+                strcmp(users[i].username, users[j].username) == 0) {
+                c++;
+            }
+        }
+
+        if (c >= 3) {                      
+            printf("Suspicious user name = %s (failed attempts = %d)\n",
+                   users[i].username, c);
+        }
+    }
+}
+void detectsip(struct c_log_parser users[],int count){
+    for (int i = 0; i < count; i++) {
+
+        if (strcmp(users[i].status, "Failed") != 0) {
+            continue;                      
+        }
+
+        int already = 0;
+        for (int k = 0; k < i; k++) {
+            if (strcmp(users[k].status, "Failed") == 0 &&
+                strcmp(users[k].ip, users[i].ip) == 0) {
+                already = 1;
+                break;
+            }
+        }
+        if (already) {
+            continue;                  
+        }
+        int c = 0;
+        for (int j = i; j < count; j++) {
+            if (strcmp(users[j].status, "Failed") == 0 &&
+                strcmp(users[i].ip, users[j].ip) == 0) {
+                c++;
+            }
+        }
+
+        if (c >= 3) {                      
+            printf("Suspicious ip address  = %s (failed attempts = %d)\n",
+                   users[i].ip, c);
+        }
+    }
+}
+
 int main(){
     int count = 0;
     int capacity = 2;
