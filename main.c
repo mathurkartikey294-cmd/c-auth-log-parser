@@ -31,6 +31,12 @@ void report(struct c_log_parser users[],int count){
     printf("Successful login are %d\n", success);
     printf("Failed attempts are %d\n", failure);
 }
+int tts(char c[]){
+    int h,m,s;
+    sscanf(c,"%d:%d:%d",&h,&m,&s);
+    int seconds = h*3600 + m*60 + s;
+    return seconds;
+}
 void detectsun(struct c_log_parser users[],int count){
     for (int i = 0; i < count; i++) {
 
@@ -51,8 +57,12 @@ void detectsun(struct c_log_parser users[],int count){
         }
         int c = 0;
         for (int j = i; j < count; j++) {
+            int a = tts(users[i].time);
+            int b = tts(users[j].time);
             if (strcmp(users[j].status, "Failed") == 0 &&
-                strcmp(users[i].username, users[j].username) == 0) {
+                strcmp(users[i].username, users[j].username) == 0 &&
+                (b-a) <= 10 &&
+                ((users[i].dnm1.date)  == ((users[j].dnm1.date))&& (strcmp((users[i].dnm1.month),((users[j].dnm1.month)))==0)))  {
                 c++;
             }
         }
@@ -83,9 +93,14 @@ void detectsip(struct c_log_parser users[],int count){
         }
         int c = 0;
         for (int j = i; j < count; j++) {
+             int a = tts(users[i].time);
+             int b = tts(users[j].time);
             if (strcmp(users[j].status, "Failed") == 0 &&
-                strcmp(users[i].ip, users[j].ip) == 0) {
+                strcmp(users[i].ip, users[j].ip) == 0 &&
+                (b-a) <= 10&&
+                 ((users[i].dnm1.date)  == ((users[j].dnm1.date))&& (strcmp((users[i].dnm1.month),((users[j].dnm1.month)))==0)))   {
                 c++;
+
             }
         }
 
@@ -105,11 +120,11 @@ int main(int argc,char *argv[]){
     int count = 0;
     int capacity = 2;
    struct c_log_parser *users = malloc(capacity*sizeof (struct c_log_parser));
-    FILE *fp = fopen("argv[1]","r");
-    if(fp == NULL){
-        printf("File not opened");
-        return 1;
-    }
+    FILE *fp = fopen(argv[1],"r");
+   if (fp == NULL) {
+    perror("fopen");
+    return 1;
+}
     char line[200];
     while(fgets( line,sizeof line,fp) != NULL){
         int n = (sscanf(line,"%3s %d %19s ubuntu-server %4s[%d]: %19s password for %19s from %19s port %d ssh2",
