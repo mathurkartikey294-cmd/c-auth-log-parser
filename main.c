@@ -18,7 +18,7 @@ struct c_log_parser{
     char status[50];
     int port;
 };
-void report(struct c_log_parser users[],int count){
+void report(struct c_log_parser users[],int count,FILE *fp){
     int success = 0;
    
     for(int i = 0;i<count;i++){
@@ -27,9 +27,9 @@ void report(struct c_log_parser users[],int count){
         }
     }
      int failure = count - success;
-    printf("Total login attempts are %d\n", count);
-    printf("Successful login are %d\n", success);
-    printf("Failed attempts are %d\n", failure);
+     fprintf(fp, "    \"login_attempts\": %d,\n", count);
+    fprintf(fp, "    \"successful_logins\": %d,\n", success);
+    fprintf(fp, "    \"failed_attempts\": %d", failure);
 }
 int tts(char c[]){
     int h,m,s;
@@ -37,7 +37,7 @@ int tts(char c[]){
     int seconds = h*3600 + m*60 + s;
     return seconds;
 }
-void detectsun(struct c_log_parser users[],int count){
+void detectsun(struct c_log_parser users[],int count,FILE *fp){
     for (int i = 0; i < count; i++) {
 
         if (strcmp(users[i].status, "Failed") != 0) {
@@ -68,100 +68,13 @@ void detectsun(struct c_log_parser users[],int count){
         }
 
         if (c >= 3) {                      
-            printf("Suspicious user name = %s (failed attempts = %d)\n",
-                   users[i].username, c);
-        }
-    }
-}
-void detectsip(struct c_log_parser users[],int count){
-    for (int i = 0; i < count; i++) {
-
-        if (strcmp(users[i].status, "Failed") != 0) {
-            continue;                      
-        }
-
-        int already = 0;
-        for (int k = 0; k < i; k++) {
-            if (strcmp(users[k].status, "Failed") == 0 &&
-                strcmp(users[k].ip, users[i].ip) == 0) {
-                already = 1;
-                break;
-            }
-        }
-        if (already) {
-            continue;                  
-        }
-        int c = 0;
-        for (int j = i; j < count; j++) {
-             int a = tts(users[i].time);
-             int b = tts(users[j].time);
-            if (strcmp(users[j].status, "Failed") == 0 &&
-                strcmp(users[i].ip, users[j].ip) == 0 &&
-                (b-a) <= 10&&
-                 ((users[i].dnm1.date)  == ((users[j].dnm1.date))&& (strcmp((users[i].dnm1.month),((users[j].dnm1.month)))==0)))   {
-                c++;
-
-            }
-        }
-
-        if (c >= 3) {                      
-            printf("Suspicious ip address  = %s (failed attempts = %d)\n",
-                   users[i].ip, c);
-        }
-    }
-}
-int export_json(struct c_log_parser users[],int count ){
-    FILE *fp = fopen("output.json","w");
-     int success = 0;
-     if(fp == NULL){
-        printf("coudnt open the file");
-        return 1;
-     }
-   
-    for(int i = 0;i<count;i++){
-        if(strcmp(users[i].status,"Accepted")==0){
-            success++;
-        }
-    }
-     int failure = count - success;
-    fprintf(fp,"Total login attempts are %d\n", count);
-    fprintf(fp,"Successful login are %d\n", success);
-    fprintf(fp,"Failed attempts are %d\n", failure);
-    for (int i = 0; i < count; i++) {
-
-        if (strcmp(users[i].status, "Failed") != 0) {
-            continue;                      
-        }
-
-        int already = 0;
-        for (int k = 0; k < i; k++) {
-            if (strcmp(users[k].status, "Failed") == 0 &&
-                strcmp(users[k].username, users[i].username) == 0) {
-                already = 1;
-                break;
-            }
-        }
-        if (already) {
-            continue;                  
-        }
-        int c = 0;
-        for (int j = i; j < count; j++) {
-            int a = tts(users[i].time);
-            int b = tts(users[j].time);
-            if (strcmp(users[j].status, "Failed") == 0 &&
-                strcmp(users[i].username, users[j].username) == 0 &&
-                (b-a) <= 10 &&
-                ((users[i].dnm1.date)  == ((users[j].dnm1.date))&& (strcmp((users[i].dnm1.month),((users[j].dnm1.month)))==0)))  {
-                c++;
-            }
-        }
-
-        if (c >= 3) {                      
-            fprintf(fp,"Suspicious user name = %s \n ",
+            fprintf(fp,"Suspicious user name = %s \n failed login = %d",
                    users[i].username, c);
             fprintf(fp,"ip = %s  event = %s port = %d pid = %d \n",users[i].ip,users[i].progrm,users[i].port,users[i].pid);
         }
     }
+}
+void detectsip(struct c_log_parser users[],int count,FILE *fp){
     for (int i = 0; i < count; i++) {
 
         if (strcmp(users[i].status, "Failed") != 0) {
@@ -191,24 +104,43 @@ int export_json(struct c_log_parser users[],int count ){
 
             }
         }
-
-        if (c >= 3) {                      
+       if (c >= 3) {                      
             fprintf(fp,"Suspicious ip address  = %s (failed attempts = %d)\n",
                    users[i].ip, c);
             fprintf(fp,"username = %s  event = %s port = %d pid = %d \n",users[i].username,users[i].progrm,users[i].port,users[i].pid);
-        
         }
     }
+}
+int export_json(struct c_log_parser users[], int count)
+{
+    printf("EXPORT FUNCTION CALLED\n");
+    FILE *fp = fopen("final_output.json", "w");
+    if (fp == NULL)
+    {
+        printf("Error opening output.json\n");
+        return 1;
+    }
+     printf("FILE OPENED\n");
+    fprintf(fp, "{\n");
+    report(users, count, fp);
+    fprintf(fp, ",\n");
+    detectsun(users, count, fp);
+    fprintf(fp, ",\n");
+    detectsip(users, count, fp);
+    fprintf(fp, "\n}\n");
+    fclose(fp);
     return 0;
 }
 
 int main(int argc,char *argv[]){
+     printf("MAIN STARTED\n");
     if(argc != 2){
         printf("Give the log file");
         return 1;
     }
-
+     printf("ARGUMENT OK\n");
     int count = 0;
+    int fl = 0;
     int capacity = 2;
    struct c_log_parser *users = malloc(capacity*sizeof (struct c_log_parser));
     FILE *fp = fopen(argv[1],"r");
@@ -216,16 +148,17 @@ int main(int argc,char *argv[]){
     perror("fopen");
     return 1;
 }
+printf("file opened");
     char line[200];
     while(fgets( line,sizeof line,fp) != NULL){
         int n = (sscanf(line,"%3s %d %19s ubuntu-server %4s[%d]: %19s password for %19s from %19s port %d ssh2",
-        users[count].dnm1.month,&users[count].dnm1.date,users[count].time,users[count].progrm,&users[count].pid,users[count].status,users[count].username,users[count].ip,&users[count].port));
+        users[fl].dnm1.month,&users[fl].dnm1.date,users[fl].time,users[fl].progrm,&users[fl].pid,users[fl].status,users[fl].username,users[fl].ip,&users[fl].port));
+        count++;
         if(n != 9){
-           
             continue;
         }
-        count++;
-        if(count == capacity){
+        fl++;
+        if(fl == capacity){
             int newc = 2*capacity;
             struct c_log_parser *temp = realloc(users,newc*sizeof (struct c_log_parser));
             if(temp == NULL){
@@ -234,16 +167,13 @@ int main(int argc,char *argv[]){
             }
             users = temp;
             capacity = newc;
-
-
         }
     }
+    printf("reading finished");
     fclose(fp);
-    report(users,count);
-    detectsun(users,count);
-    detectsip(users,count);
+    printf("BEFORE EXPORT\n");
      export_json(users,count);
+     printf("AFTER EXPORT\n");
     free(users);
-   
     return 0;
 }
