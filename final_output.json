@@ -1,0 +1,49 @@
+{
+    "login_attempts": 22,
+    "successful_logins": 2,
+    "failed_attempts": 20,
+    "suspicious_users": [
+        {
+            "username": "root",
+            "failed_attempts": 3,
+            "ip": "203.0.113.45",
+            "event": "sshd",
+            "port": 40122,
+            "pid": 1302
+        },
+        {
+            "username": "admin",
+            "failed_attempts": 3,
+            "ip": "198.51.100.23",
+            "event": "sshd",
+            "port": 33890,
+            "pid": 1340
+        }
+    ],
+    "suspicious_ips": [
+        {
+            "ip": "203.0.113.45",
+            "failed_attempts": 3,
+            "username": "root",
+            "event": "sshd",
+            "port": 40122,
+            "pid": 1302
+        },
+        {
+            "ip": "198.51.100.23",
+            "failed_attempts": 3,
+            "username": "admin",
+            "event": "sshd",
+            "port": 33890,
+            "pid": 1340
+        },
+        {
+            "ip": "192.168.1.10",
+            "failed_attempts": 3,
+            "username": "rahul",
+            "event": "sshd",
+            "port": 52344,
+            "pid": 1201
+        }
+    ]
+}

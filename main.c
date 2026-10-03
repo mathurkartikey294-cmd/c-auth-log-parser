@@ -104,8 +104,9 @@ void detectsip(struct c_log_parser users[], int count, FILE *fp)
     int first = 1;
     for (int i = 0; i < count; i++)
     {
-        if (strcmp(users[i].status, "Failed") != 0)
+        if (strcmp(users[i].status, "Failed") != 0){
             continue;
+        }
         int already = 0;
         for (int k = 0; k < i; k++)
         {
@@ -127,7 +128,7 @@ void detectsip(struct c_log_parser users[], int count, FILE *fp)
                 strcmp(users[i].ip, users[j].ip) == 0 &&
                 (b - a) <= 10 &&
                 users[i].dnm1.date == users[j].dnm1.date &&
-                strcmp(users[i].dnm1.month, users[j].dnm1.month) == 0)
+                (strcmp(users[i].dnm1.month, users[j].dnm1.month) == 0))
             {
                 c++;
             }
@@ -158,7 +159,7 @@ void detectsip(struct c_log_parser users[], int count, FILE *fp)
     }
     fprintf(fp, "\n    ]");
 }
-int export_json(struct c_log_parser users[], int count)
+int export_json(struct c_log_parser users[], int count,int logins)
 {
     printf("EXPORT FUNCTION CALLED\n");
     FILE *fp = fopen("final_output.json", "w");
@@ -167,9 +168,9 @@ int export_json(struct c_log_parser users[], int count)
         printf("Error opening output.json\n");
         return 1;
     }
-     printf("FILE OPENED\n");
+     printf("FILE OPENED\n");  
     fprintf(fp, "{\n");
-    report(users, count, fp);
+    report(users, logins, fp);
     fprintf(fp, ",\n");
     detectsun(users, count, fp);
     fprintf(fp, ",\n");
@@ -219,7 +220,7 @@ printf("file opened");
     printf("reading finished");
     fclose(fp);
     printf("BEFORE EXPORT\n");
-     export_json(users,count);
+     export_json(users,count,fl);
      printf("AFTER EXPORT\n");
     free(users);
     return 0;

@@ -1,0 +1,45 @@
+Oct  2 08:01:12 ubuntu-server sshd[1201]: pam_unix(sshd:session): session opened for user rahul by (uid=0)
+Oct  2 08:03:45 ubuntu-server sudo[1250]: rahul : TTY=pts/0 ; PWD=/home/rahul ; USER=root ; COMMAND=/usr/bin/apt update
+Oct  2 08:03:45 ubuntu-server sudo[1250]: pam_unix(sudo:session): session opened for user root by rahul(uid=1000)
+Oct  2 08:04:10 ubuntu-server sudo[1250]: pam_unix(sudo:session): session closed for user root
+Oct  2 08:15:30 ubuntu-server sshd[1302]: Failed password for root from 203.0.113.45 port 40122 ssh2
+Oct  2 08:15:34 ubuntu-server sshd[1302]: Failed password for root from 203.0.113.45 port 40122 ssh2
+Oct  2 08:15:38 ubuntu-server sshd[1302]: Failed password for root from 203.0.113.45 port 40122 ssh2
+Oct  2 08:15:40 ubuntu-server sshd[1302]: Connection closed by authenticating user root 203.0.113.45 port 40122 [preauth]
+Oct  2 08:22:05 ubuntu-server sshd[1340]: Failed password for admin from 198.51.100.23 port 33890 ssh2
+Oct  2 08:22:09 ubuntu-server sshd[1340]: Failed password for admin from 198.51.100.23 port 33890 ssh2
+Oct  2 08:22:12 ubuntu-server sshd[1340]: Failed password for admin from 198.51.100.23 port 33890 ssh2
+Oct  2 08:30:00 ubuntu-server sshd[1388]: pam_unix(sshd:session): session opened for user priya by (uid=0)
+Oct  2 08:32:18 ubuntu-server sudo[1420]: priya : TTY=pts/1 ; PWD=/home/priya ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+Oct  2 08:32:18 ubuntu-server sudo[1420]: pam_unix(sudo:session): session opened for user root by priya(uid=1001)
+Oct  2 08:32:19 ubuntu-server sudo[1420]: pam_unix(sudo:session): session closed for user root
+Oct  2 08:40:51 ubuntu-server sudo[1455]: priya : user NOT in sudoers ; TTY=pts/1 ; PWD=/home/priya ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Oct  2 08:45:22 ubuntu-server sshd[1301]: pam_unix(sshd:session): session closed for user rahul
+Oct  2 09:02:14 ubuntu-server sshd[1502]: Failed password for amit from 192.168.1.77 port 51002 ssh2
+Oct  2 09:02:20 ubuntu-server sshd[1502]: Accepted password for amit from 192.168.1.77 port 51002 ssh2
+Oct  2 09:02:20 ubuntu-server sshd[1502]: pam_unix(sshd:session): session opened for user amit by (uid=0)
+Oct  2 09:10:33 ubuntu-server sshd[1560]: Failed password for test from 203.0.113.99 port 45500 ssh2
+Oct  2 09:10:37 ubuntu-server sshd[1560]: Failed password for test from 203.0.113.99 port 45500 ssh2
+Oct  2 09:18:44 ubuntu-server sudo[1601]: amit : TTY=pts/2 ; PWD=/var/log ; USER=root ; COMMAND=/usr/bin/tail -n 50 /var/log/syslog
+Oct  2 09:18:44 ubuntu-server sudo[1601]: pam_unix(sudo:session): session opened for user root by amit(uid=1002)
+Oct  2 09:18:45 ubuntu-server sudo[1601]: pam_unix(sudo:session): session closed for user root
+Oct  2 09:25:09 ubuntu-server sshd[1650]: pam_unix(sshd:session): session opened for user rahul by (uid=0)
+Oct  2 09:50:00 ubuntu-server sshd[1389]: pam_unix(sshd:session): session closed for user priya
+Oct  2 08:01:12 ubuntu-server sshd[1201]: Failed password for rahul from 192.168.1.10 port 52344 ssh2
+Oct  2 08:01:18 ubuntu-server sshd[1202]: Failed password for aman from 192.168.1.10 port 52345 ssh2
+Oct  2 08:01:20 ubuntu-server sshd[1203]: Failed password for rohit from 192.168.1.10 port 52346 ssh2
+Oct  2 08:01:46 ubuntu-server sshd[1201]: Failed password for rahul from 192.168.1.10 port 52344 ssh2
+Oct  2 08:02:18 ubuntu-server sshd[1202]: Failed password for aman from 192.168.1.10 port 52345 ssh2
+Oct  2 08:03:20 ubuntu-server sshd[1203]: Failed password for rohit from 192.168.1.10 port 52346 ssh2
+Oct  2 08:04:31 ubuntu-server sshd[1204]: Failed password for kartikey from 192.168.1.20 port 52347 ssh2
+Oct  2 08:05:42 ubuntu-server sshd[1205]: Accepted password for rahul from 192.168.1.20 port 52348 ssh2
+Oct  2 08:06:50 ubuntu-server sshd[1206]: Failed password for aman from 192.168.1.30 port 52349 ssh2
+Oct  2 10:12:40 ubuntu-server sudo[1760]: rahul : TTY=pts/0 ; PWD=/home/rahul ; USER=root ; COMMAND=/usr/sbin/useradd testuser
+Oct  2 10:12:40 ubuntu-server sudo[1760]: pam_unix(sudo:session): session opened for user root by rahul(uid=1000)
+Oct  2 10:12:41 ubuntu-server sudo[1760]: pam_unix(sudo:session): session closed for user root
+Oct  2 10:30:55 ubuntu-server sshd[1503]: pam_unix(sshd:session): session closed for user amit
+Oct  2 10:45:03 ubuntu-server sshd[1651]: pam_unix(sshd:session): session closed for user rahul
+Oct  3 08:15:30 ubuntu-server sshd[1302]: Failed password for root from 203.0.113.45 port 40122 ssh2
+Oct  3 08:15:34 ubuntu-server sshd[1302]: Failed password for root from 203.0.113.45 port 40122 ssh2
+Oct  3 08:15:38 ubuntu-server sshd[1302]: Failed password for root from 203.0.113.45 port 40122 ssh2
+ 
