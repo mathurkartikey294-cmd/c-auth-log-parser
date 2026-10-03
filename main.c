@@ -37,79 +37,126 @@ int tts(char c[]){
     int seconds = h*3600 + m*60 + s;
     return seconds;
 }
-void detectsun(struct c_log_parser users[],int count,FILE *fp){
-    for (int i = 0; i < count; i++) {
-
-        if (strcmp(users[i].status, "Failed") != 0) {
-            continue;                      
-        }
-
+void detectsun(struct c_log_parser users[], int count, FILE *fp)
+{
+    fprintf(fp, "    \"suspicious_users\": [\n");
+    int first = 1;
+    for (int i = 0; i < count; i++)
+    {
+        if (strcmp(users[i].status, "Failed") != 0)
+            continue;
         int already = 0;
-        for (int k = 0; k < i; k++) {
+        for (int k = 0; k < i; k++)
+        {
             if (strcmp(users[k].status, "Failed") == 0 &&
-                strcmp(users[k].username, users[i].username) == 0) {
+                strcmp(users[k].username, users[i].username) == 0)
+            {
                 already = 1;
                 break;
             }
         }
-        if (already) {
-            continue;                  
-        }
+        if (already)
+            continue;
         int c = 0;
-        for (int j = i; j < count; j++) {
+        for (int j = i; j < count; j++)
+        {
             int a = tts(users[i].time);
             int b = tts(users[j].time);
             if (strcmp(users[j].status, "Failed") == 0 &&
                 strcmp(users[i].username, users[j].username) == 0 &&
-                (b-a) <= 10 &&
-                ((users[i].dnm1.date)  == ((users[j].dnm1.date))&& (strcmp((users[i].dnm1.month),((users[j].dnm1.month)))==0)))  {
+                (b - a) <= 10 &&
+                users[i].dnm1.date == users[j].dnm1.date &&
+                strcmp(users[i].dnm1.month, users[j].dnm1.month) == 0)
+            {
                 c++;
             }
         }
 
-        if (c >= 3) {                      
-            fprintf(fp,"Suspicious user name = %s \n failed login = %d",
-                   users[i].username, c);
-            fprintf(fp,"ip = %s  event = %s port = %d pid = %d \n",users[i].ip,users[i].progrm,users[i].port,users[i].pid);
+        if (c >= 3)
+        {
+            if (!first)
+                fprintf(fp, ",\n");
+
+            fprintf(fp,
+                "        {\n"
+                "            \"username\": \"%s\",\n"
+                "            \"failed_attempts\": %d,\n"
+                "            \"ip\": \"%s\",\n"
+                "            \"event\": \"%s\",\n"
+                "            \"port\": %d,\n"
+                "            \"pid\": %d\n"
+                "        }",
+                users[i].username,
+                c,
+                users[i].ip,
+                users[i].progrm,
+                users[i].port,
+                users[i].pid
+            );
+            first = 0;
         }
     }
+    fprintf(fp, "\n    ]");
 }
-void detectsip(struct c_log_parser users[],int count,FILE *fp){
-    for (int i = 0; i < count; i++) {
-
-        if (strcmp(users[i].status, "Failed") != 0) {
-            continue;                      
-        }
-
+void detectsip(struct c_log_parser users[], int count, FILE *fp)
+{
+    fprintf(fp, "    \"suspicious_ips\": [\n");
+    int first = 1;
+    for (int i = 0; i < count; i++)
+    {
+        if (strcmp(users[i].status, "Failed") != 0)
+            continue;
         int already = 0;
-        for (int k = 0; k < i; k++) {
+        for (int k = 0; k < i; k++)
+        {
             if (strcmp(users[k].status, "Failed") == 0 &&
-                strcmp(users[k].ip, users[i].ip) == 0) {
+                strcmp(users[k].ip, users[i].ip) == 0)
+            {
                 already = 1;
                 break;
             }
         }
-        if (already) {
-            continue;                  
-        }
+        if (already)
+            continue;
         int c = 0;
-        for (int j = i; j < count; j++) {
-             int a = tts(users[i].time);
-             int b = tts(users[j].time);
+        for (int j = i; j < count; j++)
+        {
+            int a = tts(users[i].time);
+            int b = tts(users[j].time);
             if (strcmp(users[j].status, "Failed") == 0 &&
                 strcmp(users[i].ip, users[j].ip) == 0 &&
-                (b-a) <= 10&&
-                 ((users[i].dnm1.date)  == ((users[j].dnm1.date))&& (strcmp((users[i].dnm1.month),((users[j].dnm1.month)))==0)))   {
+                (b - a) <= 10 &&
+                users[i].dnm1.date == users[j].dnm1.date &&
+                strcmp(users[i].dnm1.month, users[j].dnm1.month) == 0)
+            {
                 c++;
-
             }
         }
-       if (c >= 3) {                      
-            fprintf(fp,"Suspicious ip address  = %s (failed attempts = %d)\n",
-                   users[i].ip, c);
-            fprintf(fp,"username = %s  event = %s port = %d pid = %d \n",users[i].username,users[i].progrm,users[i].port,users[i].pid);
+        if (c >= 3)
+        {
+            if (!first)
+                fprintf(fp, ",\n");
+
+            fprintf(fp,
+                "        {\n"
+                "            \"ip\": \"%s\",\n"
+                "            \"failed_attempts\": %d,\n"
+                "            \"username\": \"%s\",\n"
+                "            \"event\": \"%s\",\n"
+                "            \"port\": %d,\n"
+                "            \"pid\": %d\n"
+                "        }",
+                users[i].ip,
+                c,
+                users[i].username,
+                users[i].progrm,
+                users[i].port,
+                users[i].pid
+            );
+            first = 0;
         }
     }
+    fprintf(fp, "\n    ]");
 }
 int export_json(struct c_log_parser users[], int count)
 {
